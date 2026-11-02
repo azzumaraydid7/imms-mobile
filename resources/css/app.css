@@ -1,0 +1,114 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+    /* Control-deck surfaces */
+    --color-ink-950: #04060b;
+    --color-ink-900: #070b13;
+    --color-ink-850: #0a0f19;
+    --color-ink-800: #0e1521;
+    --color-ink-700: #151e2d;
+    --color-ink-600: #1e293c;
+    --color-ink-500: #2b3a52;
+
+    /* Signal accent — carries the indigo from the sign-in screen into the deck */
+    --color-signal-300: #a5b4fc;
+    --color-signal-400: #818cf8;
+    --color-signal-500: #6366f1;
+
+    --animate-rise: rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+    --animate-beacon: beacon 2.4s ease-in-out infinite;
+}
+
+@keyframes rise {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes beacon {
+    0%,
+    100% {
+        opacity: 0.35;
+        transform: scale(0.85);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@layer base {
+    html {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+        background-color: var(--color-ink-950);
+    }
+
+    ::selection {
+        background-color: rgb(99 102 241 / 0.45);
+        color: #fff;
+    }
+
+    /* Touch devices hide scrollbars entirely; the webview is no exception. */
+    ::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+    }
+}
+
+/* Shell height. `dvh` keeps the tab bar clear of the iOS toolbar where it is
+   supported, and falls back to `vh` where it is not. */
+@utility app-height {
+    height: 100vh;
+    height: 100dvh;
+}
+
+@layer components {
+    /* Film grain — adds atmosphere so the dark surfaces don't read as flat black. */
+    .deck-grain::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        z-index: 70;
+        pointer-events: none;
+        opacity: 0.04;
+        mix-blend-mode: overlay;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* Faint engineering grid, faded out toward the bottom of the viewport. */
+    .deck-grid::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background-image:
+            linear-gradient(to right, rgb(148 163 184 / 0.045) 1px, transparent 1px),
+            linear-gradient(to bottom, rgb(148 163 184 / 0.045) 1px, transparent 1px);
+        background-size: 44px 44px;
+        mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, #000 0%, transparent 75%);
+    }
+
+    .deck-scroll {
+        scrollbar-width: thin;
+        -webkit-overflow-scrolling: touch;
+    }
+}
